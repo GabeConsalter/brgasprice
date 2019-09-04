@@ -40,6 +40,8 @@ const DataFile = {
 					row[0] = row[0].split(';');
 					row[1] = row[1].split(';');
 					row[2] = row[2].split(';');
+
+					const [ date, time ] = row[2][1].split(' ');
 	
 					data.push({
 						cnpj: row[0][0],
@@ -54,7 +56,9 @@ const DataFile = {
 						},
 						fuel: row[1][5],
 						price: Number(`${row[1][6]}.${row[2][0]}`),
-						updatedAt: new Date(row[2][1])
+						updatedAt: date && time
+							? moment(`${date.split('/')[2]}-${date.split('/')[1]}-${date.split('/')[0]}T${time.split(':')[0]}:${time.split(':')[1]}:00.00Z`)
+							: null
 					});
 				})
 				.on('end', () => resolve(data));
